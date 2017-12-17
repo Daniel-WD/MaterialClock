@@ -2,10 +2,13 @@ package danielweidensdoerfer.com.clock;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -25,108 +28,89 @@ public class Clock extends View {
             "8",
             "9"
     };
-    private static final String[] NUMBERS_6 = {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"
-    };
 
     private float mWidth, mHeight, mCenterX, mCenterY;
+
+    private float mModuleWidth, mOffsetX;
 
     private ArrayList<Module> mModules = new ArrayList<>();
 
     private Handler mHandler = new Handler();
 
+    private Paint mPTBlur, mPBBlur, mPBlack;
+    private float mTBBound, mBBBound, mBHeight = 30;
+
     private Module mModSecRight, mModSecLeft,
             mModMinRight, mModMinLeft,
-            mModHrsRight, mModHrsLeft;
-
-    private String mLastSecRight, mLastSecLeft, mLastMinRight, mLastMinLeft, mLastHrsRight, mLastHrsLeft;
-    private String mCurSecRight, mCurSecLeft, mCurMinRight, mCurMinLeft, mCurHrsRight, mCurHrsLeft;
+            mModHrsRight, mModHrsLeft,
+            mModColonLeft, mModColonRight;
 
     private Runnable loop = new Runnable() {
         @Override
         public void run() {
             Calendar calendar = Calendar.getInstance();
-            mCurSecRight = Utils.getRightNumber(calendar.get(Calendar.SECOND));
-            if(!mCurSecRight.equals(mLastSecRight)) {
-                Log.d("sldjf", "sdlkf:::" + mCurSecRight);
-                mModSecRight.next();
-                mLastSecRight = mCurSecRight;
-            }
-            mCurSecLeft = Utils.getLeftNumber(calendar.get(Calendar.SECOND));
-            if(!mCurSecLeft.equals(mLastSecLeft)) {
-                mModSecLeft.next();
-                mLastSecLeft = mCurSecLeft;
-            }
-            mCurMinRight = Utils.getRightNumber(calendar.get(Calendar.MINUTE));
-            if(!mCurMinRight.equals(mLastMinRight)) {
-                mModMinRight.next();
-                mLastMinRight = mCurMinRight;
-            }
-            mCurMinLeft = Utils.getLeftNumber(calendar.get(Calendar.MINUTE));
-            if(!mCurMinLeft.equals(mLastMinLeft)) {
-                mModMinLeft.next();
-                mLastMinLeft = mCurMinLeft;
-            }
-            mCurHrsRight = Utils.getRightNumber(calendar.get(Calendar.HOUR_OF_DAY));
-            if(!mCurHrsRight.equals(mLastHrsRight)) {
-                mModHrsRight.next();
-                mLastHrsRight = mCurHrsRight;
-            }
-            mCurHrsLeft = Utils.getLeftNumber(calendar.get(Calendar.HOUR_OF_DAY));
-            if(!mCurHrsLeft.equals(mLastHrsLeft)) {
-                mModHrsLeft.next();
-                mLastHrsLeft = mCurHrsLeft;
-            }
+            mModColonLeft.next(":");
+            mModColonRight.next(":");
 
-            mHandler.postDelayed(loop, 500);
+            mModSecRight.next(Utils.getRightNumber(calendar.get(Calendar.SECOND)));
+            mModSecLeft.next(Utils.getLeftNumber(calendar.get(Calendar.SECOND)));
+            mModMinRight.next(Utils.getRightNumber(calendar.get(Calendar.MINUTE)));
+            mModMinLeft.next(Utils.getLeftNumber(calendar.get(Calendar.MINUTE)));
+            mModHrsRight.next(Utils.getRightNumber(calendar.get(Calendar.HOUR_OF_DAY)));
+            mModHrsLeft.next(Utils.getLeftNumber(calendar.get(Calendar.HOUR_OF_DAY)));
+
+            mHandler.postDelayed(loop, 200);
         }
     };
 
     public Clock(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     private void init() {
         mModules.clear();
 
-        float moduleWidth = Utils.widthBySize(getResources().getDimensionPixelSize(R.dimen.textSize), NUMBERS_10);
+        float textSize = getResources().getDimensionPixelSize(R.dimen.textSize);
 
-        float offset = (mWidth-(8*moduleWidth))/2;
+        mModuleWidth = Utils.widthBySize(textSize, NUMBERS_10);
+        mOffsetX = (mWidth-(8*mModuleWidth))/2 + mModuleWidth/2;
 
-        mModHrsLeft = new Module(this, offset + moduleWidth*0, mCenterY, NUMBERS_10);
-        mModHrsRight = new Module(this, offset + moduleWidth*1, mCenterY, NUMBERS_10);
-        mModMinLeft = new Module(this, offset + moduleWidth*3, mCenterY, NUMBERS_6);
-        mModMinRight = new Module(this, offset + moduleWidth*4, mCenterY, NUMBERS_10);
-        mModSecLeft = new Module(this, offset + moduleWidth*6, mCenterY, NUMBERS_6);
-        mModSecRight = new Module(this, offset + moduleWidth*7, mCenterY, NUMBERS_10);
+        mModHrsLeft = new Module(this, mOffsetX + mModuleWidth*0, mCenterY);
+        mModHrsRight = new Module(this, mOffsetX + mModuleWidth*1, mCenterY);
+        mModColonLeft = new Module(this, mOffsetX + mModuleWidth*2, mCenterY);
+        mModMinLeft = new Module(this, mOffsetX + mModuleWidth*3, mCenterY);
+        mModMinRight = new Module(this, mOffsetX + mModuleWidth*4, mCenterY);
+        mModColonRight = new Module(this, mOffsetX + mModuleWidth*5, mCenterY);
+        mModSecLeft = new Module(this, mOffsetX + mModuleWidth*6, mCenterY);
+        mModSecRight = new Module(this, mOffsetX + mModuleWidth*7, mCenterY);
 
         mModules.add(mModSecRight);
         mModules.add(mModSecLeft);
+        mModules.add(mModColonLeft);
         mModules.add(mModMinRight);
         mModules.add(mModMinLeft);
+        mModules.add(mModColonRight);
         mModules.add(mModHrsRight);
         mModules.add(mModHrsLeft);
 
-        Calendar c = Calendar.getInstance();
-        mLastSecRight = Utils.getRightNumber(c.get(Calendar.SECOND));
-        mLastSecLeft = Utils.getLeftNumber(c.get(Calendar.SECOND));
-        mLastMinRight = Utils.getRightNumber(c.get(Calendar.MINUTE));
-        mLastMinLeft = Utils.getLeftNumber(c.get(Calendar.MINUTE));
-        mLastHrsRight = Utils.getRightNumber(c.get(Calendar.HOUR_OF_DAY));
-        mLastHrsLeft = Utils.getLeftNumber(c.get(Calendar.HOUR_OF_DAY));
+        textSize *= 1.2;
 
-        mModSecRight.set(mLastSecRight);
-        mModSecLeft.set(mLastSecLeft);
-        mModMinRight.set(mLastMinRight);
-        mModMinLeft.set(mLastMinLeft);
-        mModHrsRight.set(mLastHrsRight);
-        mModHrsLeft.set(mLastHrsLeft);
+        mTBBound = mCenterY - textSize/2;
+        mBBBound = mCenterY + textSize/2;
+
+        mPTBlur = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPTBlur.setStyle(Paint.Style.FILL);
+        mPTBlur.setShader(new LinearGradient(0, mTBBound - mBHeight /2, 0, mTBBound - mBHeight /2 + mBHeight,
+                Color.BLACK, Color.TRANSPARENT, Shader.TileMode.MIRROR));
+
+        mPBBlur = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPBBlur.setStyle(Paint.Style.FILL);
+        mPBBlur.setShader(new LinearGradient(0, mBBBound - mBHeight /2, 0, mBBBound - mBHeight /2 + mBHeight,
+                Color.TRANSPARENT, Color.BLACK, Shader.TileMode.MIRROR));
+
+        mPBlack = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPBlack.setColor(Color.BLACK);
+        mPBlack.setStyle(Paint.Style.FILL);
 
         mHandler.removeCallbacksAndMessages(null);
         mHandler.post(loop);
@@ -151,5 +135,15 @@ public class Clock extends View {
         for (Module module : mModules) {
             module.draw(canvas);
         }
+
+        //black top
+        canvas.drawRect(0, 0, mWidth, mTBBound - mBHeight /2, mPBlack);
+        //blur top
+        canvas.drawRect(0, mTBBound - mBHeight /2, mWidth, mTBBound - mBHeight /2 + mBHeight, mPTBlur);
+        //blur top
+        canvas.drawRect(0, mBBBound - mBHeight /2, mWidth, mBBBound - mBHeight /2 + mBHeight, mPBBlur);
+        //black bottom
+        canvas.drawRect(0, mBBBound + mBHeight /2, mWidth, mHeight, mPBlack);
+
     }
 }
