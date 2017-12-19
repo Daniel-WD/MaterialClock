@@ -1,4 +1,4 @@
-package danielweidensdoerfer.com.clock;
+package com.develdaniel.clock;
 
 import org.junit.Test;
 

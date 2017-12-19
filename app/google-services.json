@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "142659297968",
+    "firebase_url": "https://clock-75b97.firebaseio.com",
+    "project_id": "clock-75b97",
+    "storage_bucket": "clock-75b97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142659297968:android:460522c485708797",
+        "android_client_info": {
+          "package_name": "com.develdaniel.clock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142659297968-mddramardpja6r9ht67i3k0el0pldiph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.develdaniel.clock",
+            "certificate_hash": "6dc50ae727daeafb563e8f5938df71bcfb1debb9"
+          }
+        },
+        {
+          "client_id": "142659297968-p5d0g0jpgb0lq95bbt4v8qhdba6fmpet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAINsMbdjeJgyV-k7lbx0a7gRztjASLjY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142659297968-p5d0g0jpgb0lq95bbt4v8qhdba6fmpet.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="t_red">#FE0000</color>
+    <color name="t_green">#00FC00</color>
+    <color name="t_blue">#0000FC</color>
+
     <color name="gray">#a8a7a8</color>
     <color name="red_dark">#cc527a</color>
     <color name="red_light">#e91e63</color>

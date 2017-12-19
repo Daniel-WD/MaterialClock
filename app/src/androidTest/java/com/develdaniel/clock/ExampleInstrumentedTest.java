@@ -1,4 +1,4 @@
-package danielweidensdoerfer.com.clock;
+package com.develdaniel.clock;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

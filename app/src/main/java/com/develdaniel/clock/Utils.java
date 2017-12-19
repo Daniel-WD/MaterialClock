@@ -1,14 +1,15 @@
-package danielweidensdoerfer.com.clock;
+package com.develdaniel.clock;
 
+import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Typeface;
+import android.support.v4.content.res.ResourcesCompat;
 
 public class Utils {
 
-    static float widthBySize(float size, String[] strings) {
+    static float widthBySize(Context context, float size, String[] strings) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTextSize(size);
-        paint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+        paint.setTypeface(ResourcesCompat.getFont(context, R.font.black_ops_one_regular));
         float result = 0;
         for(String s : strings) {
             result = Math.max(paint.measureText(s), result);

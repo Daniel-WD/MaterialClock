@@ -7,7 +7,7 @@
     android:background="@android:color/black"
     android:fitsSystemWindows="true">
 
-    <danielweidensdoerfer.com.clock.Clock
+    <com.develdaniel.clock.Clock
         android:id="@+id/clock"
         android:layout_width="match_parent"
         android:layout_height="0dp"
