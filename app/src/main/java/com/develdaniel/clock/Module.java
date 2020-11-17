@@ -7,9 +7,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextPaint;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 
 public class Module {
@@ -35,7 +37,7 @@ public class Module {
 
     private float mVibrationFactor = 1;
 
-    Module(Clock clock, float vFactor, float x, float y) {
+    Module(Clock clock, float vFactor, float x, float y, float textSize) {
         mClock = clock;
 
         this.mX = x;
@@ -43,22 +45,20 @@ public class Module {
         mVibrationFactor = vFactor;
 
         mTPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mTPaint.setTextSize(clock.getContext().getResources().getDimensionPixelSize(R.dimen.textSize));
+        mTPaint.setTextSize(textSize);
+//        mTPaint.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
         mTPaint.setTypeface(ResourcesCompat.getFont(clock.getContext(), R.font.black_ops_one_regular));
         mTPaint.setTextAlign(Paint.Align.CENTER);
         mTPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.ADD));
 
-        mColor = ContextCompat.getColor(clock.getContext(), R.color.snow);
-        mRColor = Color.rgb(Color.red(mColor), 0, 0);
-        mGColor = Color.rgb(0, Color.green(mColor), 0);
-        mBColor = Color.rgb(0, 0, Color.blue(mColor));
+        setColor(ContextCompat.getColor(clock.getContext(), R.color.snow));
 
         mTYMani = -(mTPaint.descent() + mTPaint.ascent()) / 2;
 
         mMoveDistance = 1.5f*mTPaint.getTextSize();
 
         anim = ObjectAnimator.ofFloat(this, "offsetY", -mMoveDistance, 0);
-        anim.setDuration(700);
+        anim.setDuration(800);
         anim.addListener(new Animator.AnimatorListener() {
             @Override public void onAnimationStart(Animator animation) {}
             @Override public void onAnimationCancel(Animator animation) {}
@@ -68,6 +68,7 @@ public class Module {
             }
         });
         anim.setInterpolator(new AccelerateInterpolator(4));
+//        anim.setInterpolator(new AccelerateDecelerateInterpolator());
     }
 
     void draw(Canvas canvas) {
@@ -177,7 +178,10 @@ public class Module {
     }
 
     public void setColor(int color) {
-        mTPaint.setColor(color);
+        mColor = color;
+        mRColor = Color.rgb(Color.red(mColor), 0, 0);
+        mGColor = Color.rgb(0, Color.green(mColor), 0);
+        mBColor = Color.rgb(0, 0, Color.blue(mColor));
     }
 
 }
